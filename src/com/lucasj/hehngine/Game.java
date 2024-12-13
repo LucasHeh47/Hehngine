@@ -9,10 +9,14 @@ import java.awt.Graphics2D;
 import java.awt.KeyboardFocusManager;
 import java.awt.image.BufferStrategy;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import javax.swing.JFrame;
 
-public class Game extends Canvas implements Runnable {
+import com.lucasj.hehngine.ui.rendering.Render;
+
+public abstract class Game extends Canvas implements Runnable {
     private static final long serialVersionUID = -171090556192089278L;
 
     public boolean isRunning = false;
@@ -23,8 +27,6 @@ public class Game extends Canvas implements Runnable {
     private JFrame frame;
     
     private int fpslimit = 165;
-    
-    Game game;
 
     public Game(String title, int width, int height) {
     	frame = new JFrame(title);
@@ -94,9 +96,8 @@ public class Game extends Canvas implements Runnable {
         }
     }
 
-    private void update(double deltaTime) {
-    	game.update(deltaTime);
-    }
+    public abstract void update(double deltaTime);
+    public abstract List<Render> addRender();
 
     private void render() {
         BufferStrategy bs = getBufferStrategy();
@@ -113,6 +114,14 @@ public class Game extends Canvas implements Runnable {
         // 1. Draw the gray background
         g2d.setColor(Color.GRAY);
         g2d.fillRect(0, 0, getWidth(), getHeight());
+        
+        List<Render> renders = addRender();
+        
+        renders.sort(Comparator.comparingInt(Render::getLayer).reversed());
+        
+        for(Render render : renders) {
+        	render.render(g);
+        }
         
         g.dispose();
         bs.show();
