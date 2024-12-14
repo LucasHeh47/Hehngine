@@ -1,23 +1,26 @@
 package com.lucasj.hehngine.entities.components;
 
+import com.lucasj.hehngine.Game;
 import com.lucasj.hehngine.entities.Entity;
 import com.lucasj.hehngine.math.Vector2D;
 
 public class TransformComponent extends EntityComponent {
 	
-	private Vector2D position;
+	/***
+	 * Screen position is updated each frame. camera.worldToScreenPosition(worldPosition)
+	 */
+	private Vector2D screenPosition;
+	private Vector2D worldPosition;
 	private Vector2D size;
 
-	public TransformComponent(Entity entity) {
-		super(entity);
+	public TransformComponent(Game game, Entity entity) {
+		super(game, entity);
 	}
 
-	public Vector2D getPosition() {
-		return position;
-	}
-
-	public void setPosition(Vector2D position) {
-		this.position = position;
+	@Override
+	public void update(double deltaTime) {
+		this.screenPosition = game.getCamera().worldToScreenPosition(worldPosition);
+		
 	}
 
 	public Vector2D getSize() {
@@ -26,6 +29,18 @@ public class TransformComponent extends EntityComponent {
 
 	public void setSize(Vector2D size) {
 		this.size = size;
+	}
+
+	public Vector2D getScreenPosition() {
+		return screenPosition;
+	}
+
+	public Vector2D getWorldPosition() {
+		return worldPosition;
+	}
+
+	public void setWorldPosition(Vector2D worldPosition) {
+		this.worldPosition = worldPosition;
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.lucasj.hehngine.events;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +26,17 @@ private Map<Class<? extends GameEvent>, List<Object>> eventMap = new HashMap<>()
     	}
     }
     
-    public void dispatchEvent(GameEvent e) {
-    	
+    public void dispatchEvent(GameEvent e, Method method) {
+    	this.eventMap.get(e.getClass()).forEach(c -> {
+    		try {
+				method.invoke(c, e);
+			} catch (IllegalAccessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (InvocationTargetException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+    	});
     }
 }

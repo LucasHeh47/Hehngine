@@ -14,6 +14,8 @@ import java.util.List;
 
 import javax.swing.JFrame;
 
+import com.lucasj.hehngine.input.InputManager;
+import com.lucasj.hehngine.ui.rendering.Camera;
 import com.lucasj.hehngine.ui.rendering.Render;
 
 public abstract class Game extends Canvas implements Runnable {
@@ -28,6 +30,9 @@ public abstract class Game extends Canvas implements Runnable {
     
     private int fpslimit = 165;
 
+    private Camera camera;
+    private InputManager input;
+    
     public Game(String title, int width, int height) {
     	frame = new JFrame(title);
         Dimension size = new Dimension(width, height);
@@ -42,6 +47,13 @@ public abstract class Game extends Canvas implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+        
+        this.camera = new Camera(this);
+        this.input = new InputManager(this);
+        frame.addMouseListener(input);
+        frame.addKeyListener(input);
+        frame.addMouseWheelListener(input);
+        frame.addMouseMotionListener(input);
         
     }
     
@@ -127,4 +139,20 @@ public abstract class Game extends Canvas implements Runnable {
         bs.show();
 
     }
+
+	public int getFpslimit() {
+		return fpslimit;
+	}
+
+	public void setFpslimit(int fpslimit) {
+		this.fpslimit = fpslimit;
+	}
+
+	public Camera getCamera() {
+		return camera;
+	}
+
+	public InputManager getInput() {
+		return input;
+	}
 }
